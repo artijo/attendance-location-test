@@ -395,32 +395,38 @@ import Layout from "../layouts/Layout.astro";
                     body: JSON.stringify(data),
                 });
 
+                // Check if response is ok before parsing JSON
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+                }
+
+                // Check if response is JSON
+                const contentType = response.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error("Server did not return JSON response");
+                }
+
                 const result = await response.json();
 
-                if (response.ok) {
-                    // Store test data for thank you page
-                    const testData = {
-                        device: data.device_model,
-                        accuracy: data.accuracy,
-                        location: data.location,
-                    };
-                    localStorage.setItem(
-                        "lastGPSTest",
-                        JSON.stringify(testData),
-                    );
+                // Store test data for thank you page
+                const testData = {
+                    device: data.device_model,
+                    accuracy: data.accuracy,
+                    location: data.location,
+                };
+                localStorage.setItem(
+                    "lastGPSTest",
+                    JSON.stringify(testData),
+                );
 
-                    // Redirect to thank you page with query parameters
-                    const params = new URLSearchParams({
-                        device: data.device_model,
-                        accuracy: data.accuracy.toFixed(1),
-                        location: data.location,
-                    });
-                    window.location.href = `/thank-you?${params.toString()}`;
-                } else {
-                    throw new Error(
-                        result.error || "เกิดข้อผิดพลาดในการบันทึกข้อมูล",
-                    );
-                }
+                // Redirect to thank you page with query parameters
+                const params = new URLSearchParams({
+                    device: data.device_model,
+                    accuracy: data.accuracy.toFixed(1),
+                    location: data.location,
+                });
+                window.location.href = `/thank-you?${params.toString()}`;
+</edits>
             } catch (error) {
                 console.error("Error:", error);
                 document.getElementById("error-text").textContent =

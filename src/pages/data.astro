@@ -215,6 +215,18 @@ import Layout from "../layouts/Layout.astro";
   async function loadData() {
     try {
       const response = await fetch('/api/get-locations?limit=1000');
+      
+      // Check if response is ok
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+      }
+
+      // Check if response is JSON
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Server did not return JSON response");
+      }
+      
       const result = await response.json();
       
       if (result.success) {
@@ -232,6 +244,8 @@ import Layout from "../layouts/Layout.astro";
         } else {
           document.getElementById('data-container').classList.remove('hidden');
         }
+      } else {
+        throw new Error(result.error || 'Failed to load data');
       }
     } catch (error) {
       console.error('Error loading data:', error);
@@ -241,7 +255,7 @@ import Layout from "../layouts/Layout.astro";
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           <h3 class="mt-2 text-sm font-medium text-text-color font-heading">เกิดข้อผิดพลาด</h3>
-          <p class="mt-1 text-sm text-text-color-alt font-body">ไม่สามารถโหลดข้อมูลได้</p>
+          <p class="mt-1 text-sm text-text-color-alt font-body">ไม่สามารถโหลดข้อมูลได้: ${error.message}</p>
           <button onclick="loadData()" class="mt-4 bg-primary hover:bg-accent text-white px-4 py-2 rounded-lg font-body">
             ลองใหม่
           </button>

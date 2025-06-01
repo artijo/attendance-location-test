@@ -219,19 +219,30 @@ import Layout from "../layouts/Layout.astro";
       
       // Check if response is ok
       if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        // Try to get error details from response
+        let errorMessage = `HTTP ${response.status}`;
+        try {
+          const errorText = await response.text();
+          if (errorText) {
+            errorMessage += `: ${errorText}`;
+          }
+        } catch (e) {
+          errorMessage += ': ' + response.statusText;
+        }
+        throw new Error(errorMessage);
       }
 
       // Check if response is JSON
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Server did not return JSON response");
+        const responseText = await response.text();
+        throw new Error(`Server returned ${contentType || 'unknown'} instead of JSON. Response: ${responseText.substring(0, 200)}`);
       }
       
       const result = await response.json();
       
       if (result.success) {
-        allData = result.data;
+        allData = result.data || [];
         filteredData = [...allData];
         
         updateStats();
@@ -246,20 +257,31 @@ import Layout from "../layouts/Layout.astro";
           document.getElementById('data-container').classList.remove('hidden');
         }
       } else {
-        throw new Error(result.error || 'Failed to load data');
+        throw new Error(result.error || 'API returned success=false');
       }
     } catch (error) {
       console.error('Error loading data:', error);
+      
+      // Show detailed error message
+      let errorDetail = error.message;
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        errorDetail = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ (Network error)';
+      }
+      
       document.getElementById('loading').innerHTML = `
         <div class="text-center py-12">
           <svg class="mx-auto h-12 w-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           <h3 class="mt-2 text-sm font-medium text-text-color font-heading">เกิดข้อผิดพลาด</h3>
-          <p class="mt-1 text-sm text-text-color-alt font-body">ไม่สามารถโหลดข้อมูลได้: ${error.message}</p>
-          <button onclick="loadData()" class="mt-4 bg-primary hover:bg-accent text-white px-4 py-2 rounded-lg font-body">
-            ลองใหม่
+          <p class="mt-1 text-sm text-text-color-alt font-body">ไม่สามารถโหลดข้อมูลได้</p>
+          <p class="mt-1 text-xs text-text-color-alt font-body">${errorDetail}</p>
+          <button onclick="window.location.reload()" class="mt-4 bg-primary hover:bg-accent text-white px-4 py-2 rounded-lg font-body">
+            รีโหลดหน้า
           </button>
+          <a href="/" class="mt-2 inline-block bg-secondary hover:bg-accent text-white px-4 py-2 rounded-lg font-body">
+            กลับหน้าหลัก
+          </a>
         </div>
       `;
     }

@@ -1,0 +1,256 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="ขอบคุณ - GPS Accuracy Test">
+    <main
+        class="min-h-screen bg-gradient-to-br from-background to-line-alt py-8 px-4"
+    >
+        <div class="max-w-2xl mx-auto">
+            <!-- Success Animation -->
+            <div class="text-center mb-8">
+                <div
+                    class="inline-flex items-center justify-center w-24 h-24 bg-accent rounded-full mb-6 animate-bounce"
+                >
+                    <svg
+                        class="w-12 h-12 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        ></path>
+                    </svg>
+                </div>
+                <h1
+                    class="text-4xl font-bold text-text-color mb-4 font-heading"
+                >
+                    ขอบคุณครับ!
+                </h1>
+                <p class="text-xl text-text-color-alt font-body">
+                    ข้อมูลการทดสอบ GPS ของคุณถูกบันทึกเรียบร้อยแล้ว
+                </p>
+            </div>
+
+            <!-- Thank you message -->
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                <div class="text-center">
+                    <h2
+                        class="text-2xl font-semibold text-text-color mb-4 font-heading"
+                    >
+                        การมีส่วนร่วมของคุณมีค่ามาก
+                    </h2>
+                    <p
+                        class="text-text-color-alt mb-6 font-body leading-relaxed"
+                    >
+                        ข้อมูลที่คุณให้มาจะช่วยให้เราเข้าใจความแม่นยำของ GPS
+                        ในสถานการณ์และสถานที่ต่างๆ ได้ดีขึ้น
+                        ข้อมูลเหล่านี้จะเป็นประโยชน์สำหรับการพัฒนาเทคโนโลยีตำแหน่งในอนาคต
+                    </p>
+
+                    <!-- Stats box -->
+                    <div class="bg-line rounded-lg p-4 mb-6">
+                        <p class="text-sm text-text-color-alt font-body">
+                            ข้อมูลล่าสุดของคุณ
+                        </p>
+                        <div
+                            id="test-summary"
+                            class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2"
+                        >
+                            <div class="text-center">
+                                <p
+                                    class="text-lg font-semibold text-primary font-heading"
+                                    id="last-device"
+                                >
+                                    -
+                                </p>
+                                <p
+                                    class="text-xs text-text-color-alt font-body"
+                                >
+                                    อุปกรณ์
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <p
+                                    class="text-lg font-semibold text-secondary font-heading"
+                                    id="last-accuracy"
+                                >
+                                    -
+                                </p>
+                                <p
+                                    class="text-xs text-text-color-alt font-body"
+                                >
+                                    ความแม่นยำ
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <p
+                                    class="text-lg font-semibold text-accent font-heading"
+                                    id="last-location"
+                                >
+                                    -
+                                </p>
+                                <p
+                                    class="text-xs text-text-color-alt font-body"
+                                >
+                                    สถานที่
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="space-y-4">
+                <div class="text-center">
+                    <h3
+                        class="text-lg font-semibold text-text-color mb-4 font-heading"
+                    >
+                        คุณต้องการทำอะไรต่อ?
+                    </h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Test again -->
+                    <a
+                        href="/"
+                        class="flex items-center justify-center bg-primary hover:bg-accent text-white px-6 py-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body group"
+                    >
+                        <svg
+                            class="w-6 h-6 mr-3 group-hover:animate-pulse"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                            ></path>
+                        </svg>
+                        <div class="text-left">
+                            <p class="font-semibold">ทดสอบอีกครั้ง</p>
+                            <p class="text-sm opacity-90">ทดสอบในสถานที่อื่น</p>
+                        </div>
+                    </a>
+
+                    <!-- View data -->
+                    <!-- <a href="/data" class="flex items-center justify-center bg-secondary hover:bg-accent text-white px-6 py-4 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body group">
+            <svg class="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            <div class="text-left">
+              <p class="font-semibold">ดูข้อมูลทั้งหมด</p>
+              <p class="text-sm opacity-90">ดูผลการทดสอบ</p>
+            </div>
+          </a> -->
+                </div>
+
+                <!-- Statistics button -->
+                <!-- <div class="text-center">
+                    <a
+                        href="/stats"
+                        class="inline-flex items-center bg-line hover:bg-line-alt text-text-color px-6 py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body"
+                    >
+                        <svg
+                            class="w-5 h-5 mr-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                            ></path>
+                        </svg>
+                        ดูสถิติและวิเคราะห์ผล
+                    </a>
+                </div> -->
+            </div>
+
+            <!-- Footer message -->
+            <div class="text-center mt-8 p-4 bg-line rounded-lg">
+                <p class="text-sm text-text-color-alt font-body">
+                    <svg
+                        class="w-4 h-4 inline mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    ขอบคุณที่ช่วยพัฒนาเทคโนโลยี GPS ให้ดีขึ้น
+                </p>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    // Get data from URL parameters or localStorage
+    function getTestSummary() {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Try to get from URL parameters first
+        const device = urlParams.get("device");
+        const accuracy = urlParams.get("accuracy");
+        const location = urlParams.get("location");
+
+        if (device && accuracy && location) {
+            return { device, accuracy, location };
+        }
+
+        // Fallback to localStorage
+        const lastTest = localStorage.getItem("lastGPSTest");
+        if (lastTest) {
+            try {
+                return JSON.parse(lastTest);
+            } catch (e) {
+                console.error("Error parsing last test data:", e);
+            }
+        }
+
+        return null;
+    }
+
+    function displayTestSummary() {
+        const summary = getTestSummary();
+
+        if (summary) {
+            document.getElementById("last-device").textContent =
+                summary.device || "-";
+            document.getElementById("last-accuracy").textContent =
+                summary.accuracy
+                    ? `±${parseFloat(summary.accuracy).toFixed(1)} ม.`
+                    : "-";
+            document.getElementById("last-location").textContent =
+                summary.location || "-";
+        }
+    }
+
+    // Auto redirect after 30 seconds (optional)
+    function autoRedirect() {
+        setTimeout(() => {
+            const userChoice = confirm("ต้องการทดสอบอีกครั้งหรือไม่?");
+            if (userChoice) {
+                window.location.href = "/";
+            } else {
+                window.location.href = "/data";
+            }
+        }, 30000); // 30 seconds
+    }
+
+    // Initialize
+    displayTestSummary();
+    // autoRedirect(); // Uncomment if you want auto redirect
+</script>

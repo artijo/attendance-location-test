@@ -1,0 +1,441 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="ข้อมูลการทดสอบ - GPS Accuracy Test">
+  <main class="min-h-screen bg-gradient-to-br from-background to-line-alt py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-text-color mb-2 font-heading">ข้อมูลการทดสอบ</h1>
+        <p class="text-text-color-alt font-body">รายการข้อมูลความแม่นยำของ GPS ที่บันทึกไว้</p>
+        <div class="mt-4 flex flex-wrap justify-center gap-3">
+          <a href="/" class="inline-flex items-center bg-primary hover:bg-accent text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            เพิ่มข้อมูลใหม่
+          </a>
+          <a href="/stats" class="inline-flex items-center bg-secondary hover:bg-accent text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            สถิติ
+          </a>
+          <a href="/thank-you" class="inline-flex items-center bg-line hover:bg-line-alt text-text-color px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            ขอบคุณ
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div id="stats-cards" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-line text-primary">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-text-color-alt font-body">ทั้งหมด</p>
+              <p id="total-records" class="text-2xl font-semibold text-text-color font-heading">-</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-line text-accent">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-text-color-alt font-body">ความแม่นยำเฉลี่ย</p>
+              <p id="avg-accuracy" class="text-2xl font-semibold text-text-color font-heading">-</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-line text-secondary">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-text-color-alt font-body">ความแม่นยำดีที่สุด</p>
+              <p id="best-accuracy" class="text-2xl font-semibold text-text-color font-heading">-</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-line text-primary">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <p class="text-sm text-text-color-alt font-body">อุปกรณ์ที่ทดสอบ</p>
+              <p id="unique-devices" class="text-2xl font-semibold text-text-color font-heading">-</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <h3 class="text-lg font-semibold mb-4 text-text-color font-heading">ตัวกรอง</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-text-color mb-2 font-body">อุปกรณ์</label>
+            <select id="device-filter" class="w-full px-3 py-2 border border-line rounded-lg focus:ring-2 focus:ring-primary font-body">
+              <option value="">ทั้งหมด</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-text-color mb-2 font-body">สถานที่</label>
+            <select id="location-filter" class="w-full px-3 py-2 border border-line rounded-lg focus:ring-2 focus:ring-primary font-body">
+              <option value="">ทั้งหมด</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-text-color mb-2 font-body">เรียงตาม</label>
+            <select id="sort-filter" class="w-full px-3 py-2 border border-line rounded-lg focus:ring-2 focus:ring-primary font-body">
+              <option value="timestamp-desc">วันที่ (ใหม่ไปเก่า)</option>
+              <option value="timestamp-asc">วันที่ (เก่าไปใหม่)</option>
+              <option value="accuracy-asc">ความแม่นยำ (ดีที่สุด)</option>
+              <option value="accuracy-desc">ความแม่นยำ (แย่ที่สุด)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="px-6 py-4 border-b border-line">
+          <h3 class="text-lg font-semibold text-text-color font-heading">รายการข้อมูล</h3>
+        </div>
+        
+        <div id="loading" class="flex justify-center items-center py-12">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <span class="ml-2 text-text-color-alt font-body">กำลังโหลดข้อมูล...</span>
+        </div>
+
+        <div id="data-container" class="hidden">
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-line">
+              <thead class="bg-line">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-text-color-alt uppercase tracking-wider font-heading">อุปกรณ์</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-text-color-alt uppercase tracking-wider font-heading">สถานที่</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-text-color-alt uppercase tracking-wider font-heading">ความแม่นยำ</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-text-color-alt uppercase tracking-wider font-heading">ตำแหน่ง</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-text-color-alt uppercase tracking-wider font-heading">วันที่</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-text-color-alt uppercase tracking-wider font-heading">การกระทำ</th>
+                </tr>
+              </thead>
+              <tbody id="data-table-body" class="bg-white divide-y divide-line">
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Pagination -->
+          <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-line sm:px-6">
+            <div class="flex-1 flex justify-between sm:hidden">
+              <button id="prev-mobile" class="relative inline-flex items-center px-4 py-2 border border-line text-sm font-medium rounded-md text-text-color bg-white hover:bg-line font-body">
+                ก่อนหน้า
+              </button>
+              <button id="next-mobile" class="ml-3 relative inline-flex items-center px-4 py-2 border border-line text-sm font-medium rounded-md text-text-color bg-white hover:bg-line font-body">
+                ถัดไป
+              </button>
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+              <div>
+                <p class="text-sm text-text-color font-body">
+                  แสดง <span id="showing-from" class="font-medium">0</span> ถึง <span id="showing-to" class="font-medium">0</span> 
+                  จากทั้งหมด <span id="total-count" class="font-medium">0</span> รายการ
+                </p>
+              </div>
+              <div>
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                  <button id="prev-desktop" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-line bg-white text-sm font-medium text-text-color-alt hover:bg-line">
+                    <span class="sr-only">ก่อนหน้า</span>
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                  <div id="pagination-numbers" class="flex">
+                  </div>
+                  <button id="next-desktop" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-line bg-white text-sm font-medium text-text-color-alt hover:bg-line">
+                    <span class="sr-only">ถัดไป</span>
+                    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="no-data" class="hidden text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-text-color-alt" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-text-color font-heading">ไม่มีข้อมูล</h3>
+          <p class="mt-1 text-sm text-text-color-alt font-body">ยังไม่มีข้อมูลการทดสอบ GPS</p>
+          <div class="mt-6">
+            <a href="/" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-accent font-body">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              เริ่มทดสอบ
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  let allData = [];
+  let filteredData = [];
+  let currentPage = 1;
+  let itemsPerPage = 10;
+
+  async function loadData() {
+    try {
+      const response = await fetch('/api/get-locations?limit=1000');
+      const result = await response.json();
+      
+      if (result.success) {
+        allData = result.data;
+        filteredData = [...allData];
+        
+        updateStats();
+        populateFilters();
+        displayData();
+        
+        document.getElementById('loading').classList.add('hidden');
+        
+        if (allData.length === 0) {
+          document.getElementById('no-data').classList.remove('hidden');
+        } else {
+          document.getElementById('data-container').classList.remove('hidden');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+      document.getElementById('loading').innerHTML = `
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-text-color font-heading">เกิดข้อผิดพลาด</h3>
+          <p class="mt-1 text-sm text-text-color-alt font-body">ไม่สามารถโหลดข้อมูลได้</p>
+          <button onclick="loadData()" class="mt-4 bg-primary hover:bg-accent text-white px-4 py-2 rounded-lg font-body">
+            ลองใหม่
+          </button>
+        </div>
+      `;
+    }
+  }
+
+  function updateStats() {
+    const totalRecords = allData.length;
+    const avgAccuracy = totalRecords > 0 ? 
+      (allData.reduce((sum, item) => sum + parseFloat(item.accuracy), 0) / totalRecords).toFixed(1) : 0;
+    const bestAccuracy = totalRecords > 0 ? 
+      Math.min(...allData.map(item => parseFloat(item.accuracy))).toFixed(1) : 0;
+    const uniqueDevices = new Set(allData.map(item => item.device_model)).size;
+
+    document.getElementById('total-records').textContent = totalRecords;
+    document.getElementById('avg-accuracy').textContent = avgAccuracy + ' ม.';
+    document.getElementById('best-accuracy').textContent = bestAccuracy + ' ม.';
+    document.getElementById('unique-devices').textContent = uniqueDevices;
+  }
+
+  function populateFilters() {
+    const deviceFilter = document.getElementById('device-filter');
+    const locationFilter = document.getElementById('location-filter');
+    
+    // Clear existing options
+    deviceFilter.innerHTML = '<option value="">ทั้งหมด</option>';
+    locationFilter.innerHTML = '<option value="">ทั้งหมด</option>';
+    
+    // Get unique values
+    const uniqueDevices = [...new Set(allData.map(item => item.device_model))];
+    const uniqueLocations = [...new Set(allData.map(item => item.location))];
+    
+    uniqueDevices.forEach(device => {
+      const option = document.createElement('option');
+      option.value = device;
+      option.textContent = device;
+      deviceFilter.appendChild(option);
+    });
+    
+    uniqueLocations.forEach(location => {
+      const option = document.createElement('option');
+      option.value = location;
+      option.textContent = location;
+      locationFilter.appendChild(option);
+    });
+  }
+
+  function applyFilters() {
+    const deviceFilter = document.getElementById('device-filter').value;
+    const locationFilter = document.getElementById('location-filter').value;
+    const sortFilter = document.getElementById('sort-filter').value;
+    
+    filteredData = allData.filter(item => {
+      return (!deviceFilter || item.device_model === deviceFilter) &&
+             (!locationFilter || item.location === locationFilter);
+    });
+    
+    // Apply sorting
+    filteredData.sort((a, b) => {
+      switch(sortFilter) {
+        case 'timestamp-asc':
+          return new Date(a.timestamp) - new Date(b.timestamp);
+        case 'timestamp-desc':
+          return new Date(b.timestamp) - new Date(a.timestamp);
+        case 'accuracy-asc':
+          return parseFloat(a.accuracy) - parseFloat(b.accuracy);
+        case 'accuracy-desc':
+          return parseFloat(b.accuracy) - parseFloat(a.accuracy);
+        default:
+          return new Date(b.timestamp) - new Date(a.timestamp);
+      }
+    });
+    
+    currentPage = 1;
+    displayData();
+  }
+
+  function displayData() {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageData = filteredData.slice(startIndex, endIndex);
+    
+    const tbody = document.getElementById('data-table-body');
+    tbody.innerHTML = '';
+    
+    pageData.forEach(item => {
+      const row = document.createElement('tr');
+      const date = new Date(item.timestamp);
+      const formattedDate = date.toLocaleString('th-TH');
+      
+      row.innerHTML = `
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-color font-body">
+          ${item.device_model}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-text-color-alt font-body">
+          ${item.location}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-text-color-alt font-body">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getAccuracyColor(parseFloat(item.accuracy))}">
+            ±${parseFloat(item.accuracy).toFixed(1)} ม.
+          </span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-text-color-alt font-body">
+          ${parseFloat(item.latitude).toFixed(6)}, ${parseFloat(item.longitude).toFixed(6)}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-text-color-alt font-body">
+          ${formattedDate}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+          <button data-lat="${item.latitude}" data-lng="${item.longitude}" class="map-btn inline-flex items-center text-primary hover:text-accent font-body bg-line hover:bg-line-alt px-3 py-1 rounded-lg transition-colors">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            Google Maps
+          </button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+    
+    updatePagination();
+    
+    // Add event listeners for map buttons
+    document.querySelectorAll('.map-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const lat = this.getAttribute('data-lat');
+        const lng = this.getAttribute('data-lng');
+        viewOnMap(lat, lng);
+      });
+    });
+  }
+
+  function getAccuracyColor(accuracy) {
+    if (accuracy <= 5) return 'bg-line text-accent';
+    if (accuracy <= 15) return 'bg-line text-secondary';
+    return 'bg-line text-secondary';
+  }
+
+  function updatePagination() {
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const startItem = (currentPage - 1) * itemsPerPage + 1;
+    const endItem = Math.min(currentPage * itemsPerPage, filteredData.length);
+    
+    document.getElementById('showing-from').textContent = startItem;
+    document.getElementById('showing-to').textContent = endItem;
+    document.getElementById('total-count').textContent = filteredData.length;
+    
+    // Update pagination buttons
+    const prevButtons = ['prev-mobile', 'prev-desktop'];
+    const nextButtons = ['next-mobile', 'next-desktop'];
+    
+    prevButtons.forEach(id => {
+      const btn = document.getElementById(id);
+      btn.disabled = currentPage === 1;
+      btn.classList.toggle('opacity-50', currentPage === 1);
+    });
+    
+    nextButtons.forEach(id => {
+      const btn = document.getElementById(id);
+      btn.disabled = currentPage === totalPages;
+      btn.classList.toggle('opacity-50', currentPage === totalPages);
+    });
+  }
+
+  function changePage(direction) {
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    
+    if (direction === 'prev' && currentPage > 1) {
+      currentPage--;
+    } else if (direction === 'next' && currentPage < totalPages) {
+      currentPage++;
+    }
+    
+    displayData();
+  }
+
+  function viewOnMap(lat, lng) {
+    const url = `https://www.google.com/maps?q=${lat},${lng}&z=18&t=h`;
+    window.open(url, '_blank');
+  }
+
+  // Event listeners
+  document.getElementById('device-filter').addEventListener('change', applyFilters);
+  document.getElementById('location-filter').addEventListener('change', applyFilters);
+  document.getElementById('sort-filter').addEventListener('change', applyFilters);
+  
+  document.getElementById('prev-mobile').addEventListener('click', () => changePage('prev'));
+  document.getElementById('next-mobile').addEventListener('click', () => changePage('next'));
+  document.getElementById('prev-desktop').addEventListener('click', () => changePage('prev'));
+  document.getElementById('next-desktop').addEventListener('click', () => changePage('next'));
+
+  // Load data on page load
+  loadData();
+</script>

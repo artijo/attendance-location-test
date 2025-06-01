@@ -1,0 +1,382 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="สถิติ - GPS Accuracy Test">
+  <main class="min-h-screen bg-gradient-to-br from-background to-line-alt py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-text-color mb-2 font-heading">สถิติข้อมูล GPS</h1>
+        <p class="text-text-color-alt font-body">วิเคราะห์และสรุปผลการทดสอบความแม่นยำของ GPS</p>
+        <div class="mt-4 flex flex-wrap justify-center gap-3">
+          <a href="/" class="inline-flex items-center bg-primary hover:bg-accent text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            เพิ่มข้อมูลใหม่
+          </a>
+          <a href="/data" class="inline-flex items-center bg-secondary hover:bg-accent text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            ดูข้อมูลทั้งหมด
+          </a>
+          <a href="/thank-you" class="inline-flex items-center bg-line hover:bg-line-alt text-text-color px-4 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            ขอบคุณ
+          </a>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loading" class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <span class="ml-2 text-text-color-alt font-body">กำลังโหลดข้อมูล...</span>
+      </div>
+
+      <!-- Main Stats Grid -->
+      <div id="stats-container" class="hidden">
+        <!-- Overview Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-line text-primary">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-text-color-alt font-body">การทดสอบทั้งหมด</p>
+                <p id="total-tests" class="text-3xl font-bold text-text-color font-heading">0</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-line text-accent">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-text-color-alt font-body">ความแม่นยำเฉลี่ย</p>
+                <p id="avg-accuracy" class="text-3xl font-bold text-text-color font-heading">0 ม.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-line text-secondary">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-text-color-alt font-body">ความแม่นยำดีที่สุด</p>
+                <p id="best-accuracy" class="text-3xl font-bold text-text-color font-heading">0 ม.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center">
+              <div class="p-3 rounded-full bg-line text-primary">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm text-text-color-alt font-body">อุปกรณ์ที่ทดสอบ</p>
+                <p id="unique-devices" class="text-3xl font-bold text-text-color font-heading">0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <!-- Accuracy Distribution Chart -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-xl font-semibold text-text-color mb-4 font-heading">การกระจายความแม่นยำ</h3>
+            <div class="h-64 flex items-center justify-center">
+              <canvas id="accuracy-chart" width="400" height="200"></canvas>
+            </div>
+          </div>
+
+          <!-- Device Comparison -->
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-xl font-semibold text-text-color mb-4 font-heading">เปรียบเทียบตามอุปกรณ์</h3>
+            <div class="h-64 flex items-center justify-center">
+              <canvas id="device-chart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location Analysis -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <h3 class="text-xl font-semibold text-text-color mb-6 font-heading">วิเคราะห์ตามสถานที่</h3>
+          <div id="location-stats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Location cards will be populated here -->
+          </div>
+        </div>
+
+        <!-- Accuracy Trends -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-semibold text-text-color mb-4 font-heading">แนวโน้มความแม่นยำ</h3>
+          <div class="h-64 flex items-center justify-center">
+            <canvas id="trend-chart" width="800" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Data State -->
+      <div id="no-data" class="hidden text-center py-12">
+        <svg class="mx-auto h-16 w-16 text-text-color-alt mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
+        <h3 class="text-xl font-semibold text-text-color mb-2 font-heading">ยังไม่มีข้อมูลสถิติ</h3>
+        <p class="text-text-color-alt mb-6 font-body">เริ่มต้นด้วยการทดสอบความแม่นยำของ GPS</p>
+        <a href="/" class="inline-flex items-center bg-primary hover:bg-accent text-white px-6 py-3 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl font-body">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          เริ่มทดสอบ
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  let allData = [];
+
+  async function loadData() {
+    try {
+      const response = await fetch('/api/get-locations?limit=1000');
+      const result = await response.json();
+      
+      if (result.success) {
+        allData = result.data;
+        
+        if (allData.length === 0) {
+          document.getElementById('loading').classList.add('hidden');
+          document.getElementById('no-data').classList.remove('hidden');
+          return;
+        }
+        
+        calculateStats();
+        createCharts();
+        createLocationAnalysis();
+        
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('stats-container').classList.remove('hidden');
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+      document.getElementById('loading').innerHTML = `
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-text-color font-heading">เกิดข้อผิดพลาด</h3>
+          <p class="mt-1 text-sm text-text-color-alt font-body">ไม่สามารถโหลดข้อมูลได้</p>
+          <button onclick="loadData()" class="mt-4 bg-primary hover:bg-accent text-white px-4 py-2 rounded-lg font-body">
+            ลองใหม่
+          </button>
+        </div>
+      `;
+    }
+  }
+
+  function calculateStats() {
+    const totalTests = allData.length;
+    const accuracies = allData.map(item => parseFloat(item.accuracy));
+    const avgAccuracy = (accuracies.reduce((sum, acc) => sum + acc, 0) / totalTests).toFixed(1);
+    const bestAccuracy = Math.min(...accuracies).toFixed(1);
+    const uniqueDevices = new Set(allData.map(item => item.device_model)).size;
+
+    document.getElementById('total-tests').textContent = totalTests;
+    document.getElementById('avg-accuracy').textContent = `${avgAccuracy} ม.`;
+    document.getElementById('best-accuracy').textContent = `${bestAccuracy} ม.`;
+    document.getElementById('unique-devices').textContent = uniqueDevices;
+  }
+
+  function createCharts() {
+    createAccuracyChart();
+    createDeviceChart();
+    createTrendChart();
+  }
+
+  function createAccuracyChart() {
+    const canvas = document.getElementById('accuracy-chart');
+    const ctx = canvas.getContext('2d');
+    
+    // Simple bar chart for accuracy ranges
+    const ranges = ['0-5ม.', '5-10ม.', '10-20ม.', '20+ม.'];
+    const counts = [
+      allData.filter(item => parseFloat(item.accuracy) <= 5).length,
+      allData.filter(item => parseFloat(item.accuracy) > 5 && parseFloat(item.accuracy) <= 10).length,
+      allData.filter(item => parseFloat(item.accuracy) > 10 && parseFloat(item.accuracy) <= 20).length,
+      allData.filter(item => parseFloat(item.accuracy) > 20).length
+    ];
+
+    drawBarChart(ctx, ranges, counts, canvas.width, canvas.height);
+  }
+
+  function createDeviceChart() {
+    const canvas = document.getElementById('device-chart');
+    const ctx = canvas.getContext('2d');
+    
+    // Group by device and calculate average accuracy
+    const deviceData = {};
+    allData.forEach(item => {
+      if (!deviceData[item.device_model]) {
+        deviceData[item.device_model] = [];
+      }
+      deviceData[item.device_model].push(parseFloat(item.accuracy));
+    });
+
+    const devices = Object.keys(deviceData).slice(0, 5); // Top 5 devices
+    const avgAccuracies = devices.map(device => {
+      const accuracies = deviceData[device];
+      return (accuracies.reduce((sum, acc) => sum + acc, 0) / accuracies.length).toFixed(1);
+    });
+
+    drawBarChart(ctx, devices, avgAccuracies, canvas.width, canvas.height, true);
+  }
+
+  function createTrendChart() {
+    const canvas = document.getElementById('trend-chart');
+    const ctx = canvas.getContext('2d');
+    
+    // Group by date and calculate daily average
+    const dailyData = {};
+    allData.forEach(item => {
+      const date = new Date(item.timestamp).toLocaleDateString('th-TH');
+      if (!dailyData[date]) {
+        dailyData[date] = [];
+      }
+      dailyData[date].push(parseFloat(item.accuracy));
+    });
+
+    const dates = Object.keys(dailyData).sort();
+    const avgAccuracies = dates.map(date => {
+      const accuracies = dailyData[date];
+      return accuracies.reduce((sum, acc) => sum + acc, 0) / accuracies.length;
+    });
+
+    drawLineChart(ctx, dates, avgAccuracies, canvas.width, canvas.height);
+  }
+
+  function drawBarChart(ctx, labels, data, width, height, isAccuracy = false) {
+    const padding = 40;
+    const chartWidth = width - 2 * padding;
+    const chartHeight = height - 2 * padding;
+    const barWidth = chartWidth / labels.length * 0.8;
+    const maxValue = Math.max(...data);
+
+    // Clear canvas
+    ctx.clearRect(0, 0, width, height);
+
+    // Draw bars
+    labels.forEach((label, index) => {
+      const barHeight = (data[index] / maxValue) * chartHeight;
+      const x = padding + index * (chartWidth / labels.length) + (chartWidth / labels.length - barWidth) / 2;
+      const y = height - padding - barHeight;
+
+      // Bar
+      ctx.fillStyle = index % 2 === 0 ? '#0054a6' : '#1262a5';
+      ctx.fillRect(x, y, barWidth, barHeight);
+
+      // Value on top
+      ctx.fillStyle = '#111827';
+      ctx.font = '12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(isAccuracy ? `${data[index]}ม.` : data[index], x + barWidth/2, y - 5);
+
+      // Label
+      ctx.fillText(label, x + barWidth/2, height - padding + 15);
+    });
+  }
+
+  function drawLineChart(ctx, labels, data, width, height) {
+    const padding = 40;
+    const chartWidth = width - 2 * padding;
+    const chartHeight = height - 2 * padding;
+    const maxValue = Math.max(...data);
+    const minValue = Math.min(...data);
+    const range = maxValue - minValue || 1;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Draw line
+    ctx.strokeStyle = '#0054a6';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+
+    data.forEach((value, index) => {
+      const x = padding + (index / (data.length - 1)) * chartWidth;
+      const y = height - padding - ((value - minValue) / range) * chartHeight;
+      
+      if (index === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+
+      // Draw points
+      ctx.fillStyle = '#0054a6';
+      ctx.beginPath();
+      ctx.arc(x, y, 3, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+
+    ctx.stroke();
+  }
+
+  function createLocationAnalysis() {
+    const locationStats = {};
+    
+    allData.forEach(item => {
+      if (!locationStats[item.location]) {
+        locationStats[item.location] = {
+          count: 0,
+          accuracies: [],
+          devices: new Set()
+        };
+      }
+      locationStats[item.location].count++;
+      locationStats[item.location].accuracies.push(parseFloat(item.accuracy));
+      locationStats[item.location].devices.add(item.device_model);
+    });
+
+    const container = document.getElementById('location-stats');
+    container.innerHTML = '';
+
+    Object.entries(locationStats).forEach(([location, stats]) => {
+      const avgAccuracy = (stats.accuracies.reduce((sum, acc) => sum + acc, 0) / stats.count).toFixed(1);
+      const bestAccuracy = Math.min(...stats.accuracies).toFixed(1);
+      
+      const card = document.createElement('div');
+      card.className = 'bg-line rounded-lg p-4';
+      card.innerHTML = `
+        <h4 class="font-semibold text-text-color mb-2 font-heading">${location}</h4>
+        <div class="space-y-1 text-sm font-body">
+          <p class="text-text-color-alt">การทดสอบ: <span class="text-text-color font-medium">${stats.count}</span></p>
+          <p class="text-text-color-alt">ความแม่นยำเฉลี่ย: <span class="text-text-color font-medium">${avgAccuracy} ม.</span></p>
+          <p class="text-text-color-alt">ความแม่นยำดีที่สุด: <span class="text-text-color font-medium">${bestAccuracy} ม.</span></p>
+          <p class="text-text-color-alt">อุปกรณ์: <span class="text-text-color font-medium">${stats.devices.size}</span></p>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // Load data on page load
+  loadData();
+</script>

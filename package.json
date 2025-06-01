@@ -11,6 +11,8 @@
   "dependencies": {
     "@astrojs/cloudflare": "^12.5.3",
     "@libsql/client": "^0.15.8",
-    "astro": "^5.8.1"
+    "@tailwindcss/vite": "^4.1.8",
+    "astro": "^5.8.1",
+    "tailwindcss": "^4.1.8"
   }
 }

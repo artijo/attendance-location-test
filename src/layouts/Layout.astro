@@ -1,12 +1,11 @@
 ---
 export interface Props {
-  title?: string;
+    title?: string;
 }
 
 const { title = "GPS Accuracy Test - ทดสอบความแม่นยำของ GPS" } = Astro.props;
 import "../styles/global.css";
 ---
-
 
 <!doctype html>
 <html lang="en">
@@ -16,8 +15,17 @@ import "../styles/global.css";
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
-        <meta name="description" content="ทดสอบและบันทึกความแม่นยำของ GPS ในสถานที่ต่างๆ" />
-        <meta name="keywords" content="GPS, accuracy, test, location, ความแม่นยำ, ทดสอบ, ตำแหน่ง" />
+        <script
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+            defer></script>
+        <meta
+            name="description"
+            content="ทดสอบและบันทึกความแม่นยำของ GPS ในสถานที่ต่างๆ"
+        />
+        <meta
+            name="keywords"
+            content="GPS, accuracy, test, location, ความแม่นยำ, ทดสอบ, ตำแหน่ง"
+        />
     </head>
     <body>
         <slot />

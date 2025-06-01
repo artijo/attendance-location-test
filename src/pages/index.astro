@@ -177,6 +177,12 @@ import Layout from "../layouts/Layout.astro";
                     />
                 </div>
 
+                <div
+                    class="cf-turnstile"
+                    data-sitekey="0x4AAAAAABfj7pem5sgCgw_n"
+                >
+                </div>
+
                 <div class="bg-line border border-line-alt rounded-lg p-4">
                     <div class="flex items-start">
                         <svg
@@ -384,12 +390,16 @@ import Layout from "../layouts/Layout.astro";
                 loadingSpinner.style.display = "inline-block";
 
                 const formData = new FormData(e.target);
+                const turnstileToken = document.querySelector(
+                    'input[name="cf-turnstile-response"]',
+                )?.value;
                 const data = {
                     device_model: formData.get("device_model"),
                     latitude: currentGPSData.lat,
                     longitude: currentGPSData.lon,
                     accuracy: currentGPSData.accuracy,
                     location: formData.get("location"),
+                    turnstile_token: turnstileToken,
                 };
 
                 try {

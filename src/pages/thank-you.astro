@@ -196,61 +196,63 @@ import Layout from "../layouts/Layout.astro";
     </main>
 </Layout>
 
-<script>
-    // Get data from URL parameters or localStorage
-    function getTestSummary() {
-        const urlParams = new URLSearchParams(window.location.search);
+<script is:inline>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get data from URL parameters or localStorage
+        function getTestSummary() {
+            const urlParams = new URLSearchParams(window.location.search);
 
-        // Try to get from URL parameters first
-        const device = urlParams.get("device");
-        const accuracy = urlParams.get("accuracy");
-        const location = urlParams.get("location");
+            // Try to get from URL parameters first
+            const device = urlParams.get("device");
+            const accuracy = urlParams.get("accuracy");
+            const location = urlParams.get("location");
 
-        if (device && accuracy && location) {
-            return { device, accuracy, location };
+            if (device && accuracy && location) {
+                return { device, accuracy, location };
+            }
+
+            // Fallback to localStorage
+            const lastTest = localStorage.getItem("lastGPSTest");
+            if (lastTest) {
+                try {
+                    return JSON.parse(lastTest);
+                } catch (e) {
+                    console.error("Error parsing last test data:", e);
+                }
+            }
+
+            return null;
         }
 
-        // Fallback to localStorage
-        const lastTest = localStorage.getItem("lastGPSTest");
-        if (lastTest) {
-            try {
-                return JSON.parse(lastTest);
-            } catch (e) {
-                console.error("Error parsing last test data:", e);
+        function displayTestSummary() {
+            const summary = getTestSummary();
+
+            if (summary) {
+                document.getElementById("last-device").textContent =
+                    summary.device || "-";
+                document.getElementById("last-accuracy").textContent =
+                    summary.accuracy
+                        ? `±${parseFloat(summary.accuracy).toFixed(1)} ม.`
+                        : "-";
+                document.getElementById("last-location").textContent =
+                    summary.location || "-";
             }
         }
 
-        return null;
-    }
-
-    function displayTestSummary() {
-        const summary = getTestSummary();
-
-        if (summary) {
-            document.getElementById("last-device").textContent =
-                summary.device || "-";
-            document.getElementById("last-accuracy").textContent =
-                summary.accuracy
-                    ? `±${parseFloat(summary.accuracy).toFixed(1)} ม.`
-                    : "-";
-            document.getElementById("last-location").textContent =
-                summary.location || "-";
+        // Auto redirect after 30 seconds (optional)
+        function autoRedirect() {
+            setTimeout(() => {
+                const userChoice = confirm("ต้องการทดสอบอีกครั้งหรือไม่?");
+                if (userChoice) {
+                    window.location.href = "/";
+                } else {
+                    window.location.href = "/data";
+                }
+            }, 30000); // 30 seconds
         }
-    }
 
-    // Auto redirect after 30 seconds (optional)
-    function autoRedirect() {
-        setTimeout(() => {
-            const userChoice = confirm("ต้องการทดสอบอีกครั้งหรือไม่?");
-            if (userChoice) {
-                window.location.href = "/";
-            } else {
-                window.location.href = "/data";
-            }
-        }, 30000); // 30 seconds
-    }
-
-    // Initialize
-    displayTestSummary();
-    // autoRedirect(); // Uncomment if you want auto redirect
+        // Initialize
+        displayTestSummary();
+        // autoRedirect(); // Uncomment if you want auto redirect
+    });
 </script>

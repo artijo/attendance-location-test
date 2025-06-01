@@ -152,10 +152,11 @@ import Layout from "../layouts/Layout.astro";
   </main>
 </Layout>
 
-<script>
-  let allData = [];
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    let allData = [];
 
-  async function loadData() {
+    async function loadData() {
     try {
       const response = await fetch('/api/get-locations?limit=1000');
       const result = await response.json();
@@ -377,6 +378,7 @@ import Layout from "../layouts/Layout.astro";
     });
   }
 
-  // Load data on page load
-  loadData();
+    // Load data on page load
+    loadData();
+  });
 </script>

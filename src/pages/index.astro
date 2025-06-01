@@ -250,199 +250,190 @@ import Layout from "../layouts/Layout.astro";
     </main>
 </Layout>
 
-<script>
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
     let currentGPSData = null;
 
     function updateGPSDisplay(lat, lon, accuracy) {
-        document.getElementById("latitude").textContent = lat.toFixed(6);
-        document.getElementById("longitude").textContent = lon.toFixed(6);
-        document.getElementById("accuracy").textContent =
-            `±${accuracy.toFixed(1)} เมตร`;
-
-        document.getElementById("gps-status").classList.add("hidden");
-        document.getElementById("gps-data").classList.remove("hidden");
-        document.getElementById("refresh-gps").classList.remove("hidden");
-
-        const submitBtn = document.getElementById("submit-btn");
-        const submitText = document.getElementById("submit-text");
-        const loadingSpinner = document.getElementById("loading-spinner");
-
-        submitBtn.disabled = false;
-        submitBtn.classList.remove("bg-line");
-        submitBtn.classList.add("bg-accent", "hover:bg-primary");
-        submitText.textContent = "บันทึกข้อมูล";
-        loadingSpinner.classList.add("hidden");
+      document.getElementById('latitude').textContent = lat.toFixed(6);
+      document.getElementById('longitude').textContent = lon.toFixed(6);
+      document.getElementById('accuracy').textContent = `±${accuracy.toFixed(1)} เมตร`;
+      
+      document.getElementById('gps-status').classList.add('hidden');
+      document.getElementById('gps-data').classList.remove('hidden');
+      document.getElementById('refresh-gps').classList.remove('hidden');
+      
+      const submitBtn = document.getElementById('submit-btn');
+      const submitText = document.getElementById('submit-text');
+      const loadingSpinner = document.getElementById('loading-spinner');
+      
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('bg-line');
+      submitBtn.classList.add('bg-accent', 'hover:bg-primary');
+      submitText.textContent = 'บันทึกข้อมูล';
+      loadingSpinner.classList.add('hidden');
     }
 
     function showGPSError(message) {
-        const statusDiv = document.getElementById("gps-status");
-        statusDiv.innerHTML = `
-      <div class="text-center py-4">
-        <svg class="w-12 h-12 text-secondary mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <p class="text-secondary font-semibold font-heading">ไม่สามารถดึงข้อมูล GPS ได้</p>
-        <p class="text-text-color-alt text-sm mt-1 font-body">${message}</p>
-        <button onclick="getCurrentPosition()" class="mt-3 bg-primary hover:bg-accent text-white py-2 px-4 rounded-lg transition-colors font-body">
-          ลองใหม่
-        </button>
-      </div>
-    `;
+      const statusDiv = document.getElementById('gps-status');
+      statusDiv.innerHTML = `
+        <div class="text-center py-4">
+          <svg class="w-12 h-12 text-secondary mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p class="text-secondary font-semibold font-heading">ไม่สามารถดึงข้อมูล GPS ได้</p>
+          <p class="text-text-color-alt text-sm mt-1 font-body">${message}</p>
+          <button onclick="getCurrentPosition()" class="mt-3 bg-primary hover:bg-accent text-white py-2 px-4 rounded-lg transition-colors font-body">
+            ลองใหม่
+          </button>
+        </div>
+      `;
     }
 
     function getCurrentPosition() {
-        document.getElementById("gps-status").innerHTML = `
-      <div class="animate-pulse">
-        <div class="inline-block w-8 h-8 border-4 border-line border-t-primary rounded-full animate-spin"></div>
-        <p class="mt-2 text-text-color-alt font-body">กำลังดึงข้อมูล GPS...</p>
-      </div>
-    `;
+      document.getElementById('gps-status').innerHTML = `
+        <div class="animate-pulse">
+          <div class="inline-block w-8 h-8 border-4 border-line border-t-primary rounded-full animate-spin"></div>
+          <p class="mt-2 text-text-color-alt font-body">กำลังดึงข้อมูล GPS...</p>
+        </div>
+      `;
 
-        navigator.geolocation.getCurrentPosition(
-            function (position) {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                const accuracy = position.coords.accuracy;
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const accuracy = position.coords.accuracy;
 
-                currentGPSData = { lat, lon, accuracy };
-                updateGPSDisplay(lat, lon, accuracy);
+          currentGPSData = { lat, lon, accuracy };
+          updateGPSDisplay(lat, lon, accuracy);
 
-                console.log(`Latitude: ${lat}`);
-                console.log(`Longitude: ${lon}`);
-                console.log(`Accuracy: ±${accuracy} meters`);
-            },
-            function (error) {
-                let message = "ไม่ทราบสาเหตุ";
-                switch (error.code) {
-                    case error.PERMISSION_DENIED:
-                        message = "ผู้ใช้ไม่อนุญาตการเข้าถึงตำแหน่ง";
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        message = "ไม่สามารถหาตำแหน่งได้";
-                        break;
-                    case error.TIMEOUT:
-                        message = "หมดเวลาในการค้นหาตำแหน่ง";
-                        break;
-                }
-                showGPSError(message);
-                console.error("ไม่สามารถดึงตำแหน่งได้: ", error.message);
-            },
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0,
-            },
-        );
+          console.log(`Latitude: ${lat}`);
+          console.log(`Longitude: ${lon}`);
+          console.log(`Accuracy: ±${accuracy} meters`);
+        },
+        function (error) {
+          let message = "ไม่ทราบสาเหตุ";
+          switch(error.code) {
+            case error.PERMISSION_DENIED:
+              message = "ผู้ใช้ไม่อนุญาตการเข้าถึงตำแหน่ง";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              message = "ไม่สามารถหาตำแหน่งได้";
+              break;
+            case error.TIMEOUT:
+              message = "หมดเวลาในการค้นหาตำแหน่ง";
+              break;
+          }
+          showGPSError(message);
+          console.error("ไม่สามารถดึงตำแหน่งได้: ", error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
     }
 
     function hideMessage(elementId) {
-        setTimeout(() => {
-            document.getElementById(elementId).classList.add("hidden");
-        }, 5000);
+      setTimeout(() => {
+        document.getElementById(elementId).classList.add('hidden');
+      }, 5000);
     }
 
     // Initialize GPS on page load
     getCurrentPosition();
 
     // Refresh GPS button
-    document
-        .getElementById("refresh-gps")
-        .addEventListener("click", getCurrentPosition);
+    document.getElementById('refresh-gps').addEventListener('click', getCurrentPosition);
 
     // Form submission
-    document
-        .getElementById("location-form")
-        .addEventListener("submit", async function (e) {
-            e.preventDefault();
+    document.getElementById('location-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      if (!currentGPSData) {
+        document.getElementById('error-text').textContent = 
+          'ไม่พบข้อมูล GPS กรุณารอให้ระบบดึงข้อมูลก่อน';
+        document.getElementById('error-message').classList.remove('hidden');
+        hideMessage('error-message');
+        return;
+      }
 
-            if (!currentGPSData) {
-                document.getElementById("error-text").textContent =
-                    "ไม่พบข้อมูล GPS กรุณารอให้ระบบดึงข้อมูลก่อน";
-                document
-                    .getElementById("error-message")
-                    .classList.remove("hidden");
-                hideMessage("error-message");
-                return;
-            }
+      const submitBtn = document.getElementById('submit-btn');
+      const submitText = document.getElementById('submit-text');
+      const loadingSpinner = document.getElementById('loading-spinner');
+      
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.classList.remove('bg-accent', 'hover:bg-primary');
+      submitBtn.classList.add('bg-line');
+      submitText.textContent = 'กำลังบันทึก...';
+      loadingSpinner.classList.remove('hidden');
+      loadingSpinner.style.display = 'inline-block';
 
-            const submitBtn = document.getElementById("submit-btn");
-            const submitText = document.getElementById("submit-text");
-            const loadingSpinner = document.getElementById("loading-spinner");
+      const formData = new FormData(e.target);
+      const data = {
+        device_model: formData.get('device_model'),
+        latitude: currentGPSData.lat,
+        longitude: currentGPSData.lon,
+        accuracy: currentGPSData.accuracy,
+        location: formData.get('location')
+      };
 
-            // Show loading state
-            submitBtn.disabled = true;
-            submitBtn.classList.remove("bg-accent", "hover:bg-primary");
-            submitBtn.classList.add("bg-line");
-            submitText.textContent = "กำลังบันทึก...";
-            loadingSpinner.classList.remove("hidden");
-            loadingSpinner.style.display = "inline-block";
-
-            const formData = new FormData(e.target);
-            const data = {
-                device_model: formData.get("device_model"),
-                latitude: currentGPSData.lat,
-                longitude: currentGPSData.lon,
-                accuracy: currentGPSData.accuracy,
-                location: formData.get("location"),
-            };
-
-            try {
-                const response = await fetch("/api/save-location", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                });
-
-                // Check if response is ok before parsing JSON
-                if (!response.ok) {
-                    throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
-                }
-
-                // Check if response is JSON
-                const contentType = response.headers.get("content-type");
-                if (!contentType || !contentType.includes("application/json")) {
-                    throw new Error("Server did not return JSON response");
-                }
-
-                const result = await response.json();
-
-                // Store test data for thank you page
-                const testData = {
-                    device: data.device_model,
-                    accuracy: data.accuracy,
-                    location: data.location,
-                };
-                localStorage.setItem(
-                    "lastGPSTest",
-                    JSON.stringify(testData),
-                );
-
-                // Redirect to thank you page with query parameters
-                const params = new URLSearchParams({
-                    device: data.device_model,
-                    accuracy: data.accuracy.toFixed(1),
-                    location: data.location,
-                });
-                window.location.href = `/thank-you?${params.toString()}`;
-</edits>
-            } catch (error) {
-                console.error("Error:", error);
-                document.getElementById("error-text").textContent =
-                    error.message;
-                document
-                    .getElementById("error-message")
-                    .classList.remove("hidden");
-                hideMessage("error-message");
-            } finally {
-                // Reset button state
-                submitBtn.disabled = false;
-                submitBtn.classList.remove("bg-line");
-                submitBtn.classList.add("bg-accent", "hover:bg-primary");
-                submitText.textContent = "บันทึกข้อมูล";
-                loadingSpinner.classList.add("hidden");
-                loadingSpinner.style.display = "none";
-            }
+      try {
+        const response = await fetch('/api/save-location', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
         });
+
+        // Check if response is ok before parsing JSON
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+        }
+
+        // Check if response is JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Server did not return JSON response");
+        }
+
+        const result = await response.json();
+
+        // Store test data for thank you page
+        const testData = {
+          device: data.device_model,
+          accuracy: data.accuracy,
+          location: data.location
+        };
+        localStorage.setItem('lastGPSTest', JSON.stringify(testData));
+        
+        // Redirect to thank you page with query parameters
+        const params = new URLSearchParams({
+          device: data.device_model,
+          accuracy: data.accuracy.toFixed(1),
+          location: data.location
+        });
+        window.location.href = `/thank-you?${params.toString()}`;
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('error-text').textContent = error.message;
+        document.getElementById('error-message').classList.remove('hidden');
+        hideMessage('error-message');
+      } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('bg-line');
+        submitBtn.classList.add('bg-accent', 'hover:bg-primary');
+        submitText.textContent = 'บันทึกข้อมูล';
+        loadingSpinner.classList.add('hidden');
+        loadingSpinner.style.display = 'none';
+      }
+    });
+
+    // Make getCurrentPosition global for onclick handlers
+    window.getCurrentPosition = getCurrentPosition;
+  });
 </script>

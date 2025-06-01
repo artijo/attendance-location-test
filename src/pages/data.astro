@@ -206,13 +206,14 @@ import Layout from "../layouts/Layout.astro";
   </main>
 </Layout>
 
-<script>
-  let allData = [];
-  let filteredData = [];
-  let currentPage = 1;
-  let itemsPerPage = 10;
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function() {
+    let allData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    let itemsPerPage = 10;
 
-  async function loadData() {
+    async function loadData() {
     try {
       const response = await fetch('/api/get-locations?limit=1000');
       
@@ -450,6 +451,7 @@ import Layout from "../layouts/Layout.astro";
   document.getElementById('prev-desktop').addEventListener('click', () => changePage('prev'));
   document.getElementById('next-desktop').addEventListener('click', () => changePage('next'));
 
-  // Load data on page load
-  loadData();
+    // Load data on page load
+    loadData();
+  });
 </script>

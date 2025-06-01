@@ -9,7 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.5.3",
+    "@astrojs/vercel": "^8.1.4",
     "@libsql/client": "^0.15.8",
     "@tailwindcss/vite": "^4.1.8",
     "astro": "^5.8.1",
